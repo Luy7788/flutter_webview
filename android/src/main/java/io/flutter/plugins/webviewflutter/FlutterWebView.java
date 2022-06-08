@@ -5,29 +5,38 @@
 package io.flutter.plugins.webviewflutter;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.DownloadListener;
+import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.FrameLayout;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import io.flutter.Log;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.platform.PlatformView;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 public class FlutterWebView implements PlatformView, MethodCallHandler {
 
@@ -37,10 +46,76 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   private final FlutterWebViewClient flutterWebViewClient;
   private final Handler platformThreadHandler;
 
+    //修复视频全屏问题
+    private Activity activity;
+    private FlutterWebChromeClient mWebChromeClient;
+
   // Verifies that a url opened by `Window.open` has a secure url.
   private class FlutterWebChromeClient extends WebChromeClient {
 
-    @Override
+      ///视频问题
+      private View mCustomView;
+      private CustomViewCallback mCustomViewCallback;
+      private WebView webview;
+      private int normalSystemUiVisibility;
+      private  Activity activity ;
+
+      public void setActivity(Activity activity) {
+          this.activity = activity;
+      }
+
+      public void setWebView(WebView webview) {
+          this.webview = webview;
+      }
+
+      //MARK:修改插件
+      @Override
+      public void onShowCustomView(View view, CustomViewCallback callback) {
+          Log.d("webviewtest", "onShowCustomView: activity :" + (activity == null));
+          if (mCustomView != null || activity == null) {
+              onHideCustomView();
+              return;
+          }
+          mCustomView = view;
+          mCustomView.setBackgroundColor(0xff000000);
+          mCustomViewCallback = callback;
+          FrameLayout decorView = (FrameLayout)activity.getWindow().getDecorView();
+          normalSystemUiVisibility = decorView.getWindowSystemUiVisibility();
+          Log.d("webviewtest", "show normalSystemUiVisibility: " + normalSystemUiVisibility);
+          decorView.addView(this.mCustomView, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+          webview.setVisibility(View.GONE);
+          decorView.setSystemUiVisibility(
+                  View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                          // Set the content to appear under the system bars so that the
+                          // content doesn't resize when the system bars hide and show.
+                          | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                          | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                          | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                          // Hide the nav bar and status bar
+                          | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                          | View.SYSTEM_UI_FLAG_FULLSCREEN);
+          super.onShowCustomView(view, callback);
+      }
+
+      public void onHideCustomView() {
+          Log.d("webviewtest", "onHideCustomView: ");
+          webview.setVisibility(View.VISIBLE);
+          if (mCustomView == null  ||activity == null) {
+              return;
+          }
+
+          mCustomView.setVisibility(View.GONE);
+
+          FrameLayout decorView = (FrameLayout) activity.getWindow().getDecorView();
+          decorView.removeView(mCustomView);
+          mCustomViewCallback.onCustomViewHidden();
+          mCustomView = null;
+          super.onHideCustomView();
+          decorView.setSystemUiVisibility(normalSystemUiVisibility);
+          Log.d("webviewtest", "hide normalSystemUiVisibility: " + decorView.getSystemUiVisibility());
+      }
+
+      @Override
     public boolean onCreateWindow(
         final WebView view, boolean isDialog, boolean isUserGesture, Message resultMsg) {
       final WebViewClient webViewClient =
@@ -78,10 +153,35 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     }
 
     @Override
+    public boolean onShowFileChooser(
+            WebView webView,
+            ValueCallback<Uri[]> filePathCallback,
+            FileChooserParams fileChooserParams) {
+      // info as of 2021-03-08:
+      // don't use fileChooserParams.getTitle() as it is (always? on Mi 9T Pro Android 10 at least) null
+      // don't use fileChooserParams.isCaptureEnabled() as it is (always? on Mi 9T Pro Android 10 at least) false, even when the file upload allows images or any file
+      final Context context = webView.getContext();
+      final boolean allowMultipleFiles =
+              Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                      && fileChooserParams.getMode() == FileChooserParams.MODE_OPEN_MULTIPLE;
+      final String[] acceptTypes =
+              Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP
+                      ? fileChooserParams.getAcceptTypes()
+                      : new String[0];
+      new FileChooserLauncher(context, allowMultipleFiles, filePathCallback, acceptTypes).start();
+      return true;
+    }
+
+    @Override
     public void onProgressChanged(WebView view, int progress) {
       flutterWebViewClient.onLoadingProgress(progress);
     }
   }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
+        mWebChromeClient.setActivity(activity);
+    }
 
   @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
   @SuppressWarnings("unchecked")
@@ -98,17 +198,22 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
 
     this.methodChannel = methodChannel;
     this.methodChannel.setMethodCallHandler(this);
-
     flutterWebViewClient = new FlutterWebViewClient(methodChannel);
 
+
+      mWebChromeClient = new FlutterWebChromeClient();
     FlutterDownloadListener flutterDownloadListener =
         new FlutterDownloadListener(flutterWebViewClient);
     webView =
         createWebView(
             new WebViewBuilder(context, containerView),
             params,
-            new FlutterWebChromeClient(),
+                mWebChromeClient,
             flutterDownloadListener);
+
+      mWebChromeClient.setWebView(webView);
+      mWebChromeClient.setActivity(activity);
+
     flutterDownloadListener.setWebView(webView);
 
     displayListenerProxy.onPostWebViewInitialization(displayManager);

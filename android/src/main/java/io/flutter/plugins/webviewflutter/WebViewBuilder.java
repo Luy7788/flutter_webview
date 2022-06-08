@@ -5,11 +5,13 @@
 package io.flutter.plugins.webviewflutter;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -150,6 +152,13 @@ public class WebViewBuilder {
     webSettings.setSupportMultipleWindows(supportMultipleWindows);
     webView.setWebChromeClient(webChromeClient);
     webView.setDownloadListener(downloadListener);
+
+      //MARK:修改插件
+    // 图片不显示问题
+      if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+          webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+      }
+      webSettings.setBlockNetworkImage(false);
     return webView;
   }
 }
