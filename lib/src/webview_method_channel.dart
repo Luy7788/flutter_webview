@@ -161,6 +161,15 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   Future<int> getScrollY() =>
       _channel.invokeMethod<int>("getScrollY").then((result) => result!);
 
+  @override
+  Future setupVisultEffect(bool enable) {
+    if (enable == true) {
+      return _channel.invokeMethod("enableEffect").then((result) => result!);
+    } else {
+      return _channel.invokeMethod("disableEffect").then((result) => result!);
+    }
+  }
+
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
     return _cookieManagerChannel

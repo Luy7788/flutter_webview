@@ -27,6 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
  * This class overrides some methods in `WKWebView` to serve the needs for the plugin.
  */
 @interface FLTWKWebView : WKWebView
+//- (void)takeSnapshotWithCompletionHandler:(void (^)(UIImage * _Nullable snapshotImage, NSError * _Nullable error))completionHandler;
 @end
 
 NS_ASSUME_NONNULL_END

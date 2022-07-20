@@ -66,6 +66,7 @@
   NSMutableSet* _javaScriptChannelNames;
   FLTWKNavigationDelegate* _navigationDelegate;
   FLTWKProgressionDelegate* _progressionDelegate;
+  UIVisualEffectView *_visualEffectView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -169,9 +170,34 @@
     [self getScrollX:call result:result];
   } else if ([[call method] isEqualToString:@"getScrollY"]) {
     [self getScrollY:call result:result];
+  } else if ([[call method] isEqualToString:@"enableEffect"]) {
+    [self enableEffect:call result:result];
+  } else if ([[call method] isEqualToString:@"disableEffect"]) {
+    [self disableEffect:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+- (void)enableEffect:(FlutterMethodCall*)call result:(FlutterResult)result {
+    if (_visualEffectView == nil) {
+        UIVisualEffect *blurEffect;
+        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        UIVisualEffectView *visualEffectView;
+        visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        visualEffectView.frame = _webView.bounds;
+        visualEffectView.alpha = 0.8;
+        _visualEffectView = visualEffectView;
+    }
+    [_webView addSubview:_visualEffectView];
+    result(nil);
+}
+
+- (void)disableEffect:(FlutterMethodCall*)call result:(FlutterResult)result {
+    if (_visualEffectView != nil) {
+        [_visualEffectView removeFromSuperview];
+    }
+    result(nil);
 }
 
 - (void)onUpdateSettings:(FlutterMethodCall*)call result:(FlutterResult)result {

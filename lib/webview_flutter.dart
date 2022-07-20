@@ -800,6 +800,11 @@ class WebViewController {
   Future<int> getScrollY() {
     return _webViewPlatformController.getScrollY();
   }
+
+  Future setupVisultEffect(bool enable) {
+    return _webViewPlatformController.setupVisultEffect(enable);
+  }
+
 }
 
 /// Manages cookies pertaining to all [WebView]s.
