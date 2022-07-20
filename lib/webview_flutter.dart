@@ -801,8 +801,8 @@ class WebViewController {
     return _webViewPlatformController.getScrollY();
   }
 
-  Future setupVisultEffect(bool enable) {
-    return _webViewPlatformController.setupVisultEffect(enable);
+  Future setupVisualEffect(bool enable) {
+    return _webViewPlatformController.setupVisualEffect(enable);
   }
 
 }

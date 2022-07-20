@@ -323,9 +323,9 @@ abstract class WebViewPlatformController {
         "WebView getScrollY is not implemented on the current platform");
   }
 
-  Future setupVisultEffect(bool enable) {
+  Future setupVisualEffect(bool enable) {
     throw UnimplementedError(
-        "WebView getScrollY is not implemented on the current platform");
+        "WebView setupVisualEffect is not implemented on the current platform");
   }
 }
 
