@@ -167,9 +167,9 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       return _channel.invokeMethod("enableEffect", {
         'isDark': isDark ?? true,
         'alpha': alpha ?? 0.6,
-      }).then((result) => result!);
+      }).then((result) => result);
     } else {
-      return _channel.invokeMethod("disableEffect").then((result) => result!);
+      return _channel.invokeMethod("disableEffect").then((result) => result);
     }
   }
 
