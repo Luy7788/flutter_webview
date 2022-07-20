@@ -181,12 +181,19 @@
 
 - (void)enableEffect:(FlutterMethodCall*)call result:(FlutterResult)result {
     if (_visualEffectView == nil) {
+        NSDictionary *params = (NSDictionary *)call.arguments;
+        NSNumber *isDark = params[@"isDark"];
+        NSNumber *alpha = params[@"alpha"];
         UIVisualEffect *blurEffect;
-        blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        if (isDark.boolValue == YES) {
+            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        } else {
+            blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleLight];
+        }
         UIVisualEffectView *visualEffectView;
         visualEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         visualEffectView.frame = _webView.bounds;
-        visualEffectView.alpha = 0.8;
+        visualEffectView.alpha = alpha.doubleValue;
         _visualEffectView = visualEffectView;
     }
     [_webView addSubview:_visualEffectView];

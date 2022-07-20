@@ -801,8 +801,8 @@ class WebViewController {
     return _webViewPlatformController.getScrollY();
   }
 
-  Future setupVisualEffect(bool enable) {
-    return _webViewPlatformController.setupVisualEffect(enable);
+  Future setupVisualEffect(bool enable, {bool? isDark, double? alpha}) {
+    return _webViewPlatformController.setupVisualEffect(enable, isDark:isDark, alpha:alpha);
   }
 
 }

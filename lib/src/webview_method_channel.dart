@@ -162,9 +162,12 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       _channel.invokeMethod<int>("getScrollY").then((result) => result!);
 
   @override
-  Future setupVisualEffect(bool enable) {
+  Future setupVisualEffect(bool enable, {bool? isDark, double? alpha}) {
     if (enable == true) {
-      return _channel.invokeMethod("enableEffect").then((result) => result!);
+      return _channel.invokeMethod("enableEffect", {
+        'isDark': isDark ?? true,
+        'alpha': alpha ?? 0.6,
+      }).then((result) => result!);
     } else {
       return _channel.invokeMethod("disableEffect").then((result) => result!);
     }
