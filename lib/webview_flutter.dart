@@ -805,6 +805,10 @@ class WebViewController {
     return _webViewPlatformController.setupVisualEffect(enable, isDark:isDark, alpha:alpha);
   }
 
+  Future setupUserAction(bool enable) {
+    return _webViewPlatformController.setupUserAction(enable);
+  }
+
 }
 
 /// Manages cookies pertaining to all [WebView]s.

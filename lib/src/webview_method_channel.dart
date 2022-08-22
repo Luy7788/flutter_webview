@@ -173,6 +173,12 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
     }
   }
 
+  @override
+  Future setupUserAction(bool enable) {
+    return _channel.invokeMethod("setupUserAction", {
+      "enable": enable
+    }).then((result) => result);
+  }
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
     return _cookieManagerChannel

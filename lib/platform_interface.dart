@@ -327,6 +327,12 @@ abstract class WebViewPlatformController {
     throw UnimplementedError(
         "WebView setupVisualEffect is not implemented on the current platform");
   }
+
+  Future setupUserAction(bool enable) {
+    throw UnimplementedError(
+        "WebView setupUserAction is not implemented on the current platform");
+  }
+
 }
 
 /// A single setting for configuring a WebViewPlatform which may be absent.

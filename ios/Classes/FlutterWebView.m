@@ -174,9 +174,23 @@
     [self enableEffect:call result:result];
   } else if ([[call method] isEqualToString:@"disableEffect"]) {
     [self disableEffect:call result:result];
+  } else if ([[call method] isEqualToString:@"setupUserAction"]) {
+    [self setupUserAction:call result:result];
   } else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+- (void)setupUserAction:(FlutterMethodCall*)call result:(FlutterResult)result {
+    NSDictionary *params = (NSDictionary *)call.arguments;
+    if (params != nil) {
+        NSNumber *enable = params[@"enable"];
+        if(enable.boolValue == YES) {
+            _webView.userInteractionEnabled = YES;
+        } else {
+            _webView.userInteractionEnabled = NO;
+        }
+    }
 }
 
 - (void)enableEffect:(FlutterMethodCall*)call result:(FlutterResult)result {
