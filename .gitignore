@@ -8,7 +8,7 @@
 build/
 pubspec.lock
 .flutter-plugins
-# flutter
+flutter
 IDEWorkspaceChecks.plist
 org.eclipse.buildship.core.prefs
 Breakpoints_v2.xcbkptlist
@@ -16,3 +16,4 @@ example/android/app/.classpath
 example/android/app/.project
 example/android/.project
 .flutter-plugins-dependencies
+local.properties
