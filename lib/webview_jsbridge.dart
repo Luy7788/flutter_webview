@@ -28,7 +28,7 @@ class WebViewJSBridge {
 
   Future<void> injectJs({WebViewInjectJsVersion esVersion = WebViewInjectJsVersion.es5}) async {
     final jsVersion = esVersion == WebViewInjectJsVersion.es5 ? 'default' : 'async';
-    final jsPath = 'packages/webview_jsbridge/assets/$jsVersion.js';
+    final jsPath = 'packages/webview_flutter/assets/$jsVersion.js';
     final jsFile = await rootBundle.loadString(jsPath);
     controller?.evaluateJavascript(jsFile);
     debugPrint('JsBridge初始化方法 injectJs');
