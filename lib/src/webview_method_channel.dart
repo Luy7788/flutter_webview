@@ -179,6 +179,12 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
       "enable": enable
     }).then((result) => result);
   }
+
+  @override
+  Future<Uint8List?> takeScreenshot() async {
+    return _channel.invokeMethod("takeScreenshot", {}).then((result) => result);
+  }
+
   /// Method channel implementation for [WebViewPlatform.clearCookies].
   static Future<bool> clearCookies() {
     return _cookieManagerChannel

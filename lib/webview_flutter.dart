@@ -801,14 +801,21 @@ class WebViewController {
     return _webViewPlatformController.getScrollY();
   }
 
+  ///只支持iOS
   Future setupVisualEffect(bool enable, {bool? isDark, double? alpha}) {
     return _webViewPlatformController.setupVisualEffect(enable, isDark:isDark, alpha:alpha);
   }
 
+  ///交互响应
   Future setupUserAction(bool enable) {
     return _webViewPlatformController.setupUserAction(enable);
   }
 
+  ///截图
+  Future<Uint8List?> takeScreenshot() async {
+    // Map<String, dynamic> args = <String, dynamic>{};
+    return await _webViewPlatformController.takeScreenshot();
+  }
 }
 
 /// Manages cookies pertaining to all [WebView]s.

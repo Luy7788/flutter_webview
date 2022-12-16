@@ -176,9 +176,25 @@
     [self disableEffect:call result:result];
   } else if ([[call method] isEqualToString:@"setupUserAction"]) {
     [self setupUserAction:call result:result];
-  } else {
+  } else if([[call method] isEqualToString:@"takeScreenshot"]) {
+    [self setupTakeScreenshot:call result:result];
+  }  else {
     result(FlutterMethodNotImplemented);
   }
+}
+
+- (void)setupTakeScreenshot:(FlutterMethodCall*)call result:(FlutterResult)result {
+//    NSDictionary *dic = call.arguments[@"screenshotConfiguration"];
+//    CGRect
+    WKSnapshotConfiguration * config = nil;
+    [_webView takeSnapshotWithConfiguration:config completionHandler:^(UIImage * _Nullable snapshotImage, NSError * _Nullable error) {
+        if (snapshotImage != nil) {
+            NSData *imageData = UIImageJPEGRepresentation(snapshotImage,1.0);
+            result(imageData);
+        } else {
+            result(nil);
+        }
+    }];
 }
 
 - (void)setupUserAction:(FlutterMethodCall*)call result:(FlutterResult)result {

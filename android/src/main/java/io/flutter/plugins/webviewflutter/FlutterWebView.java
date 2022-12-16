@@ -7,6 +7,8 @@ package io.flutter.plugins.webviewflutter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.hardware.display.DisplayManager;
 import android.net.Uri;
 import android.os.Build;
@@ -27,6 +29,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +62,7 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       private CustomViewCallback mCustomViewCallback;
       private WebView webview;
       private int normalSystemUiVisibility;
-      private  Activity activity ;
+      private Activity activity ;
 
       public void setActivity(Activity activity) {
           this.activity = activity;
@@ -395,9 +399,49 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
       case "getScrollY":
         getScrollY(result);
         break;
+      case "takeScreenshot":
+          takeScreenshot(methodCall, result);
+        break;
       default:
         result.notImplemented();
     }
+  }
+  public Handler mainLooperHandler;
+  public void takeScreenshot(MethodCall call, Result result) {
+    //Map<String, Object> screenshotConfiguration = (Map<String, Object>) call.argument("screenshotConfiguration");
+      final Context context = webView.getContext();
+      final float pixelDensity = context.getResources().getDisplayMetrics().density;
+      if (mainLooperHandler == null) {
+          mainLooperHandler = new Handler(context.getMainLooper());
+      }
+      mainLooperHandler.post(new Runnable(){
+          @Override
+          public void run() {
+              try {
+                  Bitmap screenshotBitmap = Bitmap.createBitmap(webView.getMeasuredWidth(), webView.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                  Canvas canvas = new Canvas(screenshotBitmap);
+                  canvas.translate(-webView.getScrollX(), -webView.getScrollY());
+                  webView.draw(canvas);
+                  ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                  Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
+                  int quality = 100;
+                  screenshotBitmap.compress(
+                          compressFormat,
+                          quality,
+                          byteArrayOutputStream);
+                  try {
+                      byteArrayOutputStream.close();
+                  } catch (IOException e) {
+                      e.printStackTrace();
+                  }
+                  screenshotBitmap.recycle();
+                  result.success(byteArrayOutputStream.toByteArray());
+              } catch (IllegalArgumentException e) {
+                  e.printStackTrace();
+                  result.success(null);
+              }
+          }
+      });
   }
 
   @SuppressWarnings("unchecked")
