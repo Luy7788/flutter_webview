@@ -407,7 +407,7 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
     }
   }
   public Handler mainLooperHandler;
-  public void takeScreenshot(MethodCall call, Result result) {
+  public void takeScreenshot(MethodCall call, final Result result) {
     //Map<String, Object> screenshotConfiguration = (Map<String, Object>) call.argument("screenshotConfiguration");
       final Context context = webView.getContext();
       final float pixelDensity = context.getResources().getDisplayMetrics().density;
