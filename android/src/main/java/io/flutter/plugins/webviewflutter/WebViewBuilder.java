@@ -159,6 +159,20 @@ public class WebViewBuilder {
           webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
       }
       webSettings.setBlockNetworkImage(false);
+
+      //设置滚动条样式
+      webView.setHorizontalScrollBarEnabled(false);
+      webView.setVerticalScrollBarEnabled(false);
+//      //设置自适应屏幕，两者合用
+//      webSettings.setUseWideViewPort(true); //将图片调整到适合webview的大小
+//      webSettings.setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+//      webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+//      //缩放操作
+//      webSettings.setSupportZoom(false); //支持缩放，默认为true。是下面那个的前提。
+//      webSettings.setBuiltInZoomControls(false); //设置内置的缩放控件。若为false，则该WebView不可缩放
+//      webSettings.setDisplayZoomControls(false); //隐藏原生的缩放控件
+//      webSettings.setLoadsImagesAutomatically(true); //支持自动加载图片
+//      webView.setScrollBarStyle(View.SCROLLBARS_OUTSIDE_OVERLAY);
     return webView;
   }
 }
