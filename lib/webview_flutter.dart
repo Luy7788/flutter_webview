@@ -10,7 +10,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-
+import 'src/screenshot_configuration.dart';
 import 'platform_interface.dart';
 import 'src/webview_android.dart';
 import 'src/webview_cupertino.dart';
@@ -832,9 +832,9 @@ class WebViewController {
   }
 
   ///截图
-  Future<Uint8List?> takeScreenshot() async {
-    // Map<String, dynamic> args = <String, dynamic>{};
-    return await _webViewPlatformController.takeScreenshot();
+  Future<Uint8List?> takeScreenshot(
+      {ScreenshotConfiguration? screenshotConfiguration}) async {
+    return await _webViewPlatformController.takeScreenshot(screenshotConfiguration: screenshotConfiguration);
   }
 }
 

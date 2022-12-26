@@ -5,6 +5,7 @@
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:webview_flutter/src/screenshot_configuration.dart';
 
 import '../platform_interface.dart';
 
@@ -182,8 +183,12 @@ class MethodChannelWebViewPlatform implements WebViewPlatformController {
   }
 
   @override
-  Future<Uint8List?> takeScreenshot() async {
-    return _channel.invokeMethod("takeScreenshot", {}).then((result) => result);
+  Future<Uint8List?> takeScreenshot(
+      {ScreenshotConfiguration? screenshotConfiguration}) async {
+    Map<String, dynamic> args = <String, dynamic>{};
+    args.putIfAbsent(
+        'screenshotConfiguration', () => screenshotConfiguration?.toMap());
+    return _channel.invokeMethod("takeScreenshot", args).then((result) => result);
   }
 
   /// Method channel implementation for [WebViewPlatform.clearCookies].

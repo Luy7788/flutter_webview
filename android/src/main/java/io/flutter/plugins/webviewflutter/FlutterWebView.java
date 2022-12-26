@@ -408,7 +408,7 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
   }
   public Handler mainLooperHandler;
   public void takeScreenshot(MethodCall call, final Result result) {
-    //Map<String, Object> screenshotConfiguration = (Map<String, Object>) call.argument("screenshotConfiguration");
+      final Map<String, Object> screenshotConfiguration = (Map<String, Object>) call.argument("screenshotConfiguration");
       final Context context = webView.getContext();
       final float pixelDensity = context.getResources().getDisplayMetrics().density;
       if (mainLooperHandler == null) {
@@ -425,6 +425,39 @@ public class FlutterWebView implements PlatformView, MethodCallHandler {
                   ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                   Bitmap.CompressFormat compressFormat = Bitmap.CompressFormat.PNG;
                   int quality = 100;
+
+                  if (screenshotConfiguration != null) {
+                      Map<String, Double> rect = (Map<String, Double>) screenshotConfiguration.get("rect");
+                      if (rect != null) {
+                          int rectX = (int) Math.floor(rect.get("x") * pixelDensity + 0.5);
+                          int rectY = (int) Math.floor(rect.get("y") * pixelDensity + 0.5);
+                          int rectWidth = Math.min(screenshotBitmap.getWidth(), (int) Math.floor(rect.get("width") * pixelDensity + 0.5));
+                          int rectHeight = Math.min(screenshotBitmap.getHeight(), (int) Math.floor(rect.get("height") * pixelDensity + 0.5));
+                          screenshotBitmap = Bitmap.createBitmap(
+                                  screenshotBitmap,
+                                  rectX,
+                                  rectY,
+                                  rectWidth,
+                                  rectHeight);
+                      }
+
+                      Double snapshotWidth = (Double) screenshotConfiguration.get("snapshotWidth");
+                      if (snapshotWidth != null) {
+                          int dstWidth = (int) Math.floor(snapshotWidth * pixelDensity + 0.5);
+                          float ratioBitmap = (float) screenshotBitmap.getWidth() / (float) screenshotBitmap.getHeight();
+                          int dstHeight = (int) ((float) dstWidth / ratioBitmap);
+                          screenshotBitmap = Bitmap.createScaledBitmap(screenshotBitmap, dstWidth, dstHeight, true);
+                      }
+
+                      try {
+                          compressFormat = Bitmap.CompressFormat.valueOf((String) screenshotConfiguration.get("compressFormat"));
+                      } catch (IllegalArgumentException e) {
+                          e.printStackTrace();
+                      }
+
+                      quality = (Integer) screenshotConfiguration.get("quality");
+                  }
+
                   screenshotBitmap.compress(
                           compressFormat,
                           quality,

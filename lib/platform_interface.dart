@@ -7,6 +7,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
+import 'package:webview_flutter/src/screenshot_configuration.dart';
 
 import 'webview_flutter.dart';
 
@@ -334,7 +335,8 @@ abstract class WebViewPlatformController {
         "WebView setupUserAction is not implemented on the current platform");
   }
 
-  Future<Uint8List?> takeScreenshot() async {
+  Future<Uint8List?> takeScreenshot(
+      {ScreenshotConfiguration? screenshotConfiguration}) async {
     throw UnimplementedError(
         "WebView takeScreenshot is not implemented on the current platform");
   }
