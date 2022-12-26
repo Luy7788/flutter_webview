@@ -21,8 +21,9 @@ abstract class WebViewPlatformCallbacksHandler {
   /// Invoked by [WebViewPlatformController] when a navigation request is pending.
   ///
   /// If true is returned the navigation is allowed, otherwise it is blocked.
+  /// navigationType 仅限iOS
   FutureOr<bool> onNavigationRequest(
-      {required String url, required bool isForMainFrame});
+      {required String url, required bool isForMainFrame, int? navigationType});
 
   /// Invoked by [WebViewPlatformController] when a page has started loading.
   void onPageStarted(String url);

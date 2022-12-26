@@ -31,7 +31,8 @@
   }
   NSDictionary *arguments = @{
     @"url" : navigationAction.request.URL.absoluteString,
-    @"isForMainFrame" : @(navigationAction.targetFrame.isMainFrame)
+    @"isForMainFrame" : @(navigationAction.targetFrame.isMainFrame),
+    @"navigationType": @(navigationAction.navigationType)
   };
   [_methodChannel invokeMethod:@"navigationRequest"
                      arguments:arguments

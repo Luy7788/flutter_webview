@@ -43,9 +43,18 @@ class JavascriptMessage {
 /// Callback type for handling messages sent from Javascript running in a web view.
 typedef void JavascriptMessageHandler(JavascriptMessage message);
 
+///iOS wkwebview对应枚举
+enum WKNavigationType{
+  WKNavigationTypeLinkActivated,
+  WKNavigationTypeFormSubmitted,
+  WKNavigationTypeBackForward,
+  WKNavigationTypeReload,
+  WKNavigationTypeFormResubmitted,
+  WKNavigationTypeOther,// = -1,
+}
 /// Information about a navigation action that is about to be executed.
 class NavigationRequest {
-  NavigationRequest._({required this.url, required this.isForMainFrame});
+  NavigationRequest._({required this.url, required this.isForMainFrame, this.navigationType,});
 
   /// The URL that will be loaded if the navigation is executed.
   final String url;
@@ -53,9 +62,12 @@ class NavigationRequest {
   /// Whether the navigation request is to be loaded as the main frame.
   final bool isForMainFrame;
 
+  ///仅限iOS
+  final WKNavigationType? navigationType;
+
   @override
   String toString() {
-    return '$runtimeType(url: $url, isForMainFrame: $isForMainFrame)';
+    return '$runtimeType(url: $url, isForMainFrame: $isForMainFrame， navigationType：$navigationType)';
   }
 }
 
@@ -563,9 +575,17 @@ class _PlatformCallbacksHandler implements WebViewPlatformCallbacksHandler {
   FutureOr<bool> onNavigationRequest({
     required String url,
     required bool isForMainFrame,
+    int? navigationType,
   }) async {
+    WKNavigationType? type;
+    if (navigationType != null) {
+      if (navigationType == -1)
+        type = WKNavigationType.WKNavigationTypeOther;
+      else
+        type = WKNavigationType.values[navigationType];
+    }
     final NavigationRequest request =
-        NavigationRequest._(url: url, isForMainFrame: isForMainFrame);
+        NavigationRequest._(url: url, isForMainFrame: isForMainFrame, navigationType: type);
     final bool allowNavigation = _widget.navigationDelegate == null ||
         await _widget.navigationDelegate!(request) ==
             NavigationDecision.navigate;
