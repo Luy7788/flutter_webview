@@ -1,6 +1,16 @@
 # WebView for Flutter
 
-[![pub package](https://img.shields.io/pub/v/webview_flutter.svg)](https://pub.dev/packages/webview_flutter)
+基于官方插件2.0.13版本进行维护，修改多个问题，提供选相册、窗口切换全屏播放视频等
+
+### JS交互实现代码说明:
+ [JS交互说明.md](./JS交互说明.md)
+ 
+ ps：两者交互尽量用jsonString
+
+### flutter交互实现说明:
+ [Flutter交互说明.md](./Flutter交互说明.md)
+ 
+## plugin
 
 A Flutter plugin that provides a WebView widget.
 
