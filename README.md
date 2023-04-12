@@ -8,7 +8,7 @@
  ps：两者交互尽量用jsonString
 
 ### flutter交互实现说明:
- [flutter交互说明.md](./flutter交互说明.md)
+ [Flutter交互说明.md](./Flutter交互说明.md)
  
 ## plugin
 

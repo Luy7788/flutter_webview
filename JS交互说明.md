@@ -1,6 +1,8 @@
 
 判断是否在flutter环境
 ```
+假设以UA内的flutter参数为准，具体看实际情况
+
 function isFlutter() {
   return /(Flutter|flutter)/i.test(navigator.userAgent)
 }
@@ -19,7 +21,7 @@ function callFlutterMethod(methodName, params, successCallback) {
   )
 }
 
-///监听flutter方法
+///监听flutter方法、提供flutter调用使用
 function registerFlutterListener(eventName, handler) {
   setupFlutterBridge((flutter) =>
     flutter.registerHandler('eventName', function(res) {
@@ -42,14 +44,27 @@ function setupFlutterBridge(callback) {
 
 eg：
 ```
+//调用flutter wechatPay方法 
   function wechatPay(res) {
     //……
     var data = res.data
     if (isFlutter()) {
-      callFlutterMethod("dunhuangpay", JSON.stringify(data), (val)=>{
-        //返回调起sdk成功|失败
+      callFlutterMethod("wechatPay", JSON.stringify(data), (val)=>{
+        //返回调起sdk 成功|失败
       });
+    } else {
+        // xxxx
     }
   }
 
+
+//注册提供flutter调用方法scrollToTop
+  static registerScrollToTopListener(callback) {
+    if (isFlutter()) {
+      registerFlutterListener('scrollToTop', callback)
+    } else {
+    	// xxxx
+    }
+  }
 ```
+
