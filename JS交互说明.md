@@ -24,9 +24,9 @@ function callFlutterMethod(methodName, params, successCallback) {
 ///监听flutter方法、提供flutter调用使用
 function registerFlutterListener(eventName, handler) {
   setupFlutterBridge((flutter) =>
-    flutter.registerHandler('eventName', function(res) {
+    flutter.registerHandler(eventName, function (res) {
       console.debug(`received event ${eventName}, data=${res}`)
-      handler(res ? JSON.parse(res.toString()) : {})
+      handler(res)
     })
   )
 }
