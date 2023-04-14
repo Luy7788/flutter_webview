@@ -50,11 +50,11 @@ WebView(
 eg：
 
 jsHandle() {
-    jsBridge.registerHandler("openNativePage", (Object? data) async { 
-      return Future<Object?>
+    jsBridge.registerHandler("openNativePage", (Object? data) async { 	
+      return true;
     }); 
     jsBridge.registerHandler("openLogin", (Object? data) async { 
-      return Future<Object?>
+      return Object?
     });
 }
 ```
