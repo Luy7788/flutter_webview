@@ -73,7 +73,7 @@
     function _postMessage(jsonData) {
         var jsonStr = JSON.stringify(jsonData);
         var encodeStr = encodeURIComponent(jsonStr);
-        HXFlutterJSBridgeChannel.postMessage(encodeStr);
+        FlutterJSBridgeChannel.postMessage(encodeStr);
     }
 
     function _nativeCall(message) {

@@ -1,6 +1,9 @@
 
 webview初始化设置
 ```
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter/webview_jsbridge.dart';
+
 final jsBridge = WebViewJSBridge();
 final jsVersion = WebViewInjectJsVersion.es5; //默认的js为es5版本
 

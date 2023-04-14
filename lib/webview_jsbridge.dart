@@ -21,7 +21,7 @@ class WebViewJSBridge {
 
   Set<JavascriptChannel> get jsChannels => <JavascriptChannel>{
         JavascriptChannel(
-          name: 'HXFlutterJSBridgeChannel',
+          name: 'FlutterJSBridgeChannel',
           onMessageReceived: _onMessageReceived,
         ),
       };
