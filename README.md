@@ -5,7 +5,12 @@
 默认安卓使用SurfaceAndroidWebView。
 如需切换需要设置 WebView.platform = AndroidWebView()
 ### 集成
-
+```
+  webview_flutter:
+    git:
+      url: "https://gitee.com/jlgithub/flutter_webview.git"
+      ref: "v1.1"
+```
 
 ### JS交互实现代码说明:
  [JS交互说明.md](./JS交互说明.md)
