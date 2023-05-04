@@ -263,12 +263,12 @@ class WebView extends StatefulWidget {
 
   /// The WebView platform that's used by this WebView.
   ///
-  /// The default value is [AndroidWebView] on Android and [CupertinoWebView] on iOS.
+  /// The default value is [SurfaceAndroidWebView] on Android and [CupertinoWebView] on iOS.
   static WebViewPlatform get platform {
     if (_platform == null) {
       switch (defaultTargetPlatform) {
         case TargetPlatform.android:
-          _platform = AndroidWebView();
+          _platform = SurfaceAndroidWebView();
           break;
         case TargetPlatform.iOS:
           _platform = CupertinoWebView();

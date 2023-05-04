@@ -2,6 +2,11 @@
 
 基于官方插件2.0.13版本进行维护，修改多个问题，提供选相册、窗口切换全屏播放视频等
 
+默认安卓使用SurfaceAndroidWebView。
+如需切换需要设置 WebView.platform = AndroidWebView()
+### 集成
+
+
 ### JS交互实现代码说明:
  [JS交互说明.md](./JS交互说明.md)
  
@@ -77,6 +82,8 @@ android {
 }
 ```
 
+dart: WebView.platform = AndroidWebView()
+
 
 ### Using Hybrid Composition
 
@@ -87,36 +94,6 @@ android {
         defaultConfig {
             minSdkVersion 19
         }
-    }
-    ```
-
-2. Set `WebView.platform = SurfaceAndroidWebView();` in `initState()`.
-    For example:
-    
-    ```dart
-    import 'dart:io';
-    
-    import 'package:webview_flutter/webview_flutter.dart';
-
-    class WebViewExample extends StatefulWidget {
-      @override
-      WebViewExampleState createState() => WebViewExampleState();
-    }
-    
-    class WebViewExampleState extends State<WebViewExample> {
-      @override
-      void initState() {
-        super.initState();
-            // Enable hybrid composition.
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-      }
-
-      @override
-      Widget build(BuildContext context) {
-        return WebView(
-          initialUrl: 'https://flutter.dev',
-        );
-      }
     }
     ```
 
