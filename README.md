@@ -10,6 +10,28 @@
 ### flutter交互实现说明:
  [Flutter交互说明.md](./Flutter交互说明.md)
  
+ 
+#### WebViewController提供新的方法
+
+```
+  ///截图，支持安卓、iOS
+  Future<Uint8List?> takeScreenshot(
+      {ScreenshotConfiguration? screenshotConfiguration}) async {
+    return await _webViewPlatformController.takeScreenshot(screenshotConfiguration: screenshotConfiguration);
+  }
+  
+  ///设置蒙版，只支持iOS
+  Future setupVisualEffect(bool enable, {bool? isDark, double? alpha}) {
+    return _webViewPlatformController.setupVisualEffect(enable, isDark:isDark, alpha:alpha);
+  }
+
+  ///设置交互响应，预防h5事件穿透，只支持iOS
+  Future setupUserAction(bool enable) {
+    return _webViewPlatformController.setupUserAction(enable);
+  }
+
+``` 
+ 
 ## plugin
 
 A Flutter plugin that provides a WebView widget.
