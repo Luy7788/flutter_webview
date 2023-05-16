@@ -150,6 +150,7 @@ public class WebViewBuilder {
     webSettings.setDomStorageEnabled(enableDomStorage);
     webSettings.setJavaScriptCanOpenWindowsAutomatically(javaScriptCanOpenWindowsAutomatically);
     webSettings.setSupportMultipleWindows(supportMultipleWindows);
+    webSettings.setTextZoom(100);
     webView.setWebChromeClient(webChromeClient);
     webView.setDownloadListener(downloadListener);
 
