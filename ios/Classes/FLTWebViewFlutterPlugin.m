@@ -8,11 +8,19 @@
 
 @implementation FLTWebViewFlutterPlugin
 
+static NSObject<FlutterPluginRegistrar>* mRegistrar;
+
+
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FLTWebViewFactory* webviewFactory =
-      [[FLTWebViewFactory alloc] initWithMessenger:registrar.messenger];
-  [registrar registerViewFactory:webviewFactory withId:@"plugins.flutter.io/webview"];
-  [FLTCookieManager registerWithRegistrar:registrar];
+    mRegistrar = registrar;
+    FLTWebViewFactory* webviewFactory = [[FLTWebViewFactory alloc] initWithMessenger:registrar.messenger];
+    [registrar registerViewFactory:webviewFactory withId:@"plugins.flutter.io/webview"];
+    [FLTCookieManager registerWithRegistrar:registrar];
 }
+
++ (NSString *)getAssetPath:(NSString *)asset {
+    return [mRegistrar lookupKeyForAsset:asset];
+}
+
 
 @end

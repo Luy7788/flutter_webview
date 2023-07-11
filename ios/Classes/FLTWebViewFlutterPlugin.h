@@ -5,4 +5,5 @@
 #import <Flutter/Flutter.h>
 
 @interface FLTWebViewFlutterPlugin : NSObject <FlutterPlugin>
++ (NSString *)getAssetPath:(NSString *)asset;
 @end

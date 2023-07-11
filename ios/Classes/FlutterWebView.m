@@ -6,6 +6,7 @@
 #import "FLTWKNavigationDelegate.h"
 #import "FLTWKProgressionDelegate.h"
 #import "JavaScriptChannelHandler.h"
+#import "FLTWebViewFlutterPlugin.h"
 
 @implementation FLTWebViewFactory {
   NSObject<FlutterBinaryMessenger>* _messenger;
@@ -118,7 +119,10 @@
     // https://github.com/flutter/flutter/issues/36228
 
     NSString* initialUrl = args[@"initialUrl"];
-    if ([initialUrl isKindOfClass:[NSString class]]) {
+    NSString* initialAssetFile = args[@"initialAssetFile"];
+    if ([initialAssetFile isKindOfClass:[NSString class]] && [initialAssetFile length] > 0) {
+      [self loadFile: initialAssetFile];
+    } else if ([initialUrl isKindOfClass:[NSString class]]) {
       [self loadUrl:initialUrl];
     }
   }
@@ -498,6 +502,20 @@
   }
 
   return false;
+}
+
+- (bool)loadFile:(NSString *)file {
+    NSString *filepath = [FLTWebViewFlutterPlugin getAssetPath:file];
+    NSURL *url =  [[NSBundle mainBundle] URLForResource:filepath withExtension:nil];
+    NSLog(@"webview_flutter:  %@", [url absoluteString]);
+    [_webView loadRequest:[NSURLRequest requestWithURL:url]];
+    /*if (@available(iOS 15.0, *)) {
+        [_webView loadFileRequest:[NSURLRequest requestWithURL:url] allowingReadAccessToURL:[url URLByDeletingLastPathComponent]];
+    } else {
+        // Fallback on earlier versions
+        [_webView loadFileURL:url allowingReadAccessToURL:url];
+    }*/
+    return true;
 }
 
 - (bool)loadUrl:(NSString*)url {
