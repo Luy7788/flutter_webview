@@ -9,13 +9,13 @@
   webview_flutter:
     git:
       url: "https://gitee.com/jlgithub/flutter_webview.git"
-      ref: "v1.1"
+      ref: "v1.3"
 ```
 
 ### JS交互实现代码说明:
  [JS交互说明.md](./JS交互说明.md)
  
- ps：两者交互尽量用jsonString
+ ps：两者交互尽量用jsonString!!
 
 ### flutter交互实现说明:
  [Flutter交互说明.md](./Flutter交互说明.md)
@@ -30,7 +30,7 @@
     return await _webViewPlatformController.takeScreenshot(screenshotConfiguration: screenshotConfiguration);
   }
   
-  ///设置蒙版，只支持iOS
+  ///设置模糊蒙版，只支持iOS
   Future setupVisualEffect(bool enable, {bool? isDark, double? alpha}) {
     return _webViewPlatformController.setupVisualEffect(enable, isDark:isDark, alpha:alpha);
   }

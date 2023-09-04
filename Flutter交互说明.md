@@ -32,7 +32,7 @@ WebView(
           },
           initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
           allowsInlineMediaPlayback: widget.isAllowsInlineMediaPlayback ?? true,
-          debuggingEnabled: true,
+          debuggingEnabled: kReleaseMode ? false : true,
           gestureNavigationEnabled: widget.gestureNavigationEnabled ?? false,
           javascriptMode: JavascriptMode.unrestricted,
           gestureRecognizers: widget.gestureRecognizers ?? [
