@@ -1,14 +1,18 @@
 
 webview初始化设置
+
+
 ```
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_flutter/webview_jsbridge.dart';
 
 final jsBridge = WebViewJSBridge();
-final jsVersion = WebViewInjectJsVersion.es5; //默认的js为es5版本
 
+// 默认的js为es5版本,如果web端正在使用es7，设置WebViewInjectJsVersion.es7
+final jsVersion = WebViewInjectJsVersion.es5; 
 
-WebView(
+eg:
+    WebView(
           javascriptChannels: jsBridge.jsChannels, //
           userAgent: "xxxxx hxfw Flutter iPhone", //可使用fk_user_agent或看情况自定义
           onWebViewCreated: (controller) {
